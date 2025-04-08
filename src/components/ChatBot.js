@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ChatBot.css';
 
 const ChatBot = () => {
@@ -12,8 +12,17 @@ const ChatBot = () => {
   const [leadEmail, setLeadEmail] = useState('');
   const [leadMessage, setLeadMessage] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const toggleChat = () => setIsOpen(!isOpen);
+
+  // Auto-scroll to latest message
+  useEffect(() => {
+    const chatLog = document.querySelector('.chat-log');
+    if (chatLog) {
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -25,27 +34,34 @@ const ChatBot = () => {
     // Simulated "Typing..." state
     setMessages((prev) => [...prev, { sender: 'bot', text: 'Typing...' }]);
 
-    // Call your own backend
-    const response = await fetch('https://etx-chat-bot.onrender.com/api/message', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: input })
-    });
+    try {
+      const response = await fetch('https://etx-chat-bot.onrender.com/api/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: input })
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    // Replace "Typing..." with actual response
-    setMessages((prev) => [...prev.slice(0, -1), { sender: 'bot', text: data.reply }]);
+      setMessages((prev) => [...prev.slice(0, -1), { sender: 'bot', text: data.reply }]);
 
-    // Trigger lead form if keywords are detected
-    const triggerWords = ['quote', 'estimate', 'contact', 'email', 'name', 'catering'];
-    if (triggerWords.some(word => input.toLowerCase().includes(word))) {
-      setIsFormActive(true);
+      // Trigger lead form if keywords are detected
+      const triggerWords = ['quote', 'estimate', 'contact', 'email', 'name', 'catering'];
+      if (triggerWords.some(word => input.toLowerCase().includes(word))) {
+        setIsFormActive(true);
+      }
+    } catch (error) {
+      setMessages((prev) => [...prev.slice(0, -1), {
+        sender: 'bot',
+        text: "Oops, something went wrong. Try again later."
+      }]);
     }
   };
 
   const handleLeadSubmit = async () => {
     if (!leadName || !leadEmail || !leadMessage) return;
+
+    setSubmitting(true);
 
     try {
       await fetch("https://script.google.com/macros/s/AKfycbypz5M7dvy4B8rIQMKMXQtaX73t-YrhBQ9dAD6edJi0XTs1eHo-OKkuauq_fuS-4N2S/exec", {
@@ -74,6 +90,8 @@ const ChatBot = () => {
         ...prev,
         { sender: 'bot', text: "Something went wrong. Try again later." }
       ]);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -98,10 +116,11 @@ const ChatBot = () => {
         value={leadMessage}
         onChange={(e) => setLeadMessage(e.target.value)}
       />
-      <button onClick={handleLeadSubmit}>Submit</button>
+      <button onClick={handleLeadSubmit} disabled={submitting}>
+        {submitting ? 'Submitting...' : 'Submit'}
+      </button>
     </div>
   );
-  
 
   return (
     <div className="chat-container">
@@ -111,25 +130,26 @@ const ChatBot = () => {
           <div className="chat-log">
             {messages.map((msg, idx) => (
               <div
-              key={idx}
-              className={`msg ${msg.sender}`}
-              dangerouslySetInnerHTML={{ __html: msg.text }}
-            ></div>
+                key={idx}
+                className={`msg ${msg.sender}`}
+                dangerouslySetInnerHTML={{ __html: msg.text }}
+              ></div>
             ))}
           </div>
-          {/* Show form or button */}
+
           {!formSubmitted && isFormActive && renderLeadForm()}
 
           {!isFormActive && (
-
-        <>
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Type your message"
-            />
-            <button className="lead-trigger-button" onClick={() => setIsFormActive(true)}>👤 Leave Your Info</button>
+            <>
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                placeholder="Type your message"
+              />
+              <button className="lead-trigger-button" onClick={() => setIsFormActive(true)}>
+                👤 Leave Your Info
+              </button>
             </>
           )}
         </div>

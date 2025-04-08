@@ -56,7 +56,11 @@ const responses = [
     {
       keywords: ['located', 'location', 'address'],
       response: "We're located in Downtown Tyler: <strong>221 S. Broadway, Tyler, TX 75702</strong>"
-    }
+    },
+    {
+        keywords: ['thank you', 'thanks', 'thankyou', 'appreciate it'],
+        response: "You're so welcome! 😊 If you have any other questions, I’m here to help."
+    }      
   ];
   
   const fallbackResponse = "Hmm, I'm not sure about that. You can always <a href='tel:9036307720'>give us a call at 903-630-7720</a> and we’ll help you out!";
