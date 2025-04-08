@@ -26,7 +26,7 @@ const ChatBot = () => {
     setMessages((prev) => [...prev, { sender: 'bot', text: 'Typing...' }]);
 
     // Call your own backend
-    const response = await fetch('http://localhost:5000/api/message', {
+    const response = await fetch('https://etx-chat-bot.onrender.com/api/message', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: input })

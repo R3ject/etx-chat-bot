@@ -18,8 +18,8 @@ const responses = [
       response: "Please send all booking requests to <a href='mailto:booking@etxbrew.com'>booking@etxbrew.com</a> 🎶"
     },
     {
-      keywords: ['21', 'age', 'drinking'],
-      response: "Nope! We're a family-friendly business — all ages welcome."
+      keywords: ['21', 'age', 'drinking', 'kid', 'children', 'child', 'kids'],
+      response: "We're a family-friendly business — all ages welcome."
     },
     {
       keywords: ['trivia', 'karaoke', 'live music', 'music night'],
