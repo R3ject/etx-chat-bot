@@ -13,6 +13,8 @@ const ChatBot = () => {
   const [leadMessage, setLeadMessage] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [leadPhone, setLeadPhone] = useState('');
+
 
   const toggleChat = () => setIsOpen(!isOpen);
 
@@ -59,10 +61,18 @@ const ChatBot = () => {
   };
 
   const handleLeadSubmit = async () => {
-    if (!leadName || !leadEmail || !leadMessage) return;
-
+    const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(leadEmail);
+  
+    if (!leadName || !leadEmail || !leadMessage || !emailIsValid) {
+      setMessages(prev => [
+        ...prev,
+        { sender: 'bot', text: "Please enter a valid name, email, and message." }
+      ]);
+      return;
+    }
+  
     setSubmitting(true);
-
+  
     try {
       await fetch("https://script.google.com/macros/s/AKfycbypz5M7dvy4B8rIQMKMXQtaX73t-YrhBQ9dAD6edJi0XTs1eHo-OKkuauq_fuS-4N2S/exec", {
         method: "POST",
@@ -70,15 +80,16 @@ const ChatBot = () => {
         body: JSON.stringify({
           name: leadName,
           email: leadEmail,
+          phone: leadPhone,
           message: leadMessage
         })
       });
-
-      setMessages((prev) => [
+  
+      setMessages(prev => [
         ...prev,
         { sender: 'bot', text: "Thanks! We'll reach out soon." }
       ]);
-
+  
       setFormSubmitted(true);
       setIsFormActive(false);
       setLeadName('');
@@ -86,7 +97,7 @@ const ChatBot = () => {
       setLeadMessage('');
     } catch (error) {
       console.error("Lead form error:", error);
-      setMessages((prev) => [
+      setMessages(prev => [
         ...prev,
         { sender: 'bot', text: "Something went wrong. Try again later." }
       ]);
@@ -94,6 +105,7 @@ const ChatBot = () => {
       setSubmitting(false);
     }
   };
+  
 
   const renderLeadForm = () => (
     <div className="lead-form">
@@ -111,6 +123,12 @@ const ChatBot = () => {
         value={leadEmail}
         onChange={(e) => setLeadEmail(e.target.value)}
       />
+      <input
+         type="tel"
+          placeholder="Your phone number"
+          value={leadPhone}
+          onChange={(e) => setLeadPhone(e.target.value)}
+    />
       <textarea
         placeholder="Message or question"
         value={leadMessage}
@@ -121,6 +139,7 @@ const ChatBot = () => {
       </button>
     </div>
   );
+  
 
   return (
     <div className="chat-container">
