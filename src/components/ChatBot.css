@@ -1,0 +1,132 @@
+.chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-family: 'Segoe UI', sans-serif;
+    z-index: 9999;
+  }
+  
+  .chat-toggle {
+    background-color: #941a1d;
+    color: #fff;
+    padding: 14px;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .chat-box {
+    background: #fff;
+    border: 2px solid #941a1d;
+    width: 320px;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+  
+  .chat-log {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    background: #f9f9f9;
+  }
+  
+  .msg {
+    margin: 6px 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .msg.bot {
+    text-align: left;
+    color: #333;
+  }
+  
+  .msg.user {
+    text-align: right;
+    color: #941a1d;
+    font-weight: 600;
+  }
+  
+  .chat-box input {
+    border: none;
+    border-top: 1px solid #ddd;
+    padding: 12px;
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+  }
+  
+  .lead-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    background: #fff;
+    border-top: 1px solid #eee;
+  }
+  
+  .lead-form input,
+  .lead-form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .lead-form button {
+    padding: 10px;
+    background: #941a1d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+  
+  .lead-form button:hover {
+    background: #7d1416;
+  }
+  
+  .chat-box a {
+    color: #941a1d;
+    text-decoration: underline;
+    font-weight: 500;
+  }
+  .lead-trigger-button {
+    background: #941a1d;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    width: calc(100% - 20px);
+    transition: background 0.3s ease;
+  }
+  
+  .lead-trigger-button:hover {
+    background: #7d1416;
+  }
+  
+  .back-button {
+    background: none;
+    border: none;
+    color: #941a1d;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    margin-bottom: 6px;
+    padding: 0;
+  }
+  
