@@ -74,7 +74,7 @@ const ChatBot = () => {
     setSubmitting(true);
   
     try {
-      await fetch("https://script.google.com/macros/library/d/1z8niPEBTaN6TW9wXKMU0pC7Cgj-fkXZUYTd9fwjzExWQbrwrgtcCLGBr/1", {
+      await fetch("https://script.google.com/macros/s/AKfycbypz5M7dvy4B8rIQMKMXQtaX73t-YrhBQ9dAD6edJi0XTs1eHo-OKkuauq_fuS-4N2S/exec", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
