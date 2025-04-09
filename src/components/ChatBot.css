@@ -18,22 +18,34 @@
   }
   
   .chat-box {
-    background: #fff;
-    border: 2px solid #941a1d;
-    width: 320px;
-    height: 450px;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 350px;
+    max-height: 600px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
-    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+  }
+  
+  .chat-header {
+    background-color: #941a1d;
+    color: white;
+    padding: 0.5rem;
+    font-weight: bold;
+    text-align: center;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #ccc;
   }
   
   .chat-log {
     flex: 1;
-    padding: 12px;
     overflow-y: auto;
-    background: #f9f9f9;
+    padding: 10px;
   }
   
   .msg {
@@ -62,26 +74,36 @@
     width: 100%;
   }
   
+  /* ⬇️ Fullscreen form layout */
   .lead-form {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 12px;
-    background: #fff;
-    border-top: 1px solid #eee;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
   }
   
   .lead-form input,
+  .lead-form select,
   .lead-form textarea {
+    margin-bottom: 12px;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
     font-size: 14px;
-    font-family: 'Segoe UI', sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+  }
+  
+  .lead-form textarea {
+    min-height: 140px;
+    resize: vertical;
   }
   
   .lead-form button {
-    padding: 10px;
+    padding: 12px;
     background: #941a1d;
     color: white;
     border: none;
@@ -95,11 +117,41 @@
     background: #7d1416;
   }
   
-  .chat-box a {
+  .back-button {
+    background: none;
+    border: none;
     color: #941a1d;
-    text-decoration: underline;
-    font-weight: 500;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    margin-bottom: 6px;
+    padding: 0;
   }
+  
+  .chat-thankyou {
+    padding: 1rem;
+    text-align: center;
+    font-weight: bold;
+    color: #941a1d;
+  }
+  
+  .clear-chat-button {
+    background-color: transparent;
+    border: none;
+    color: #941a1d;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin: 0.5rem;
+    text-align: right;
+    display: block;
+    margin-left: auto;
+  }
+  
+  .clear-chat-button:hover {
+    text-decoration: underline;
+  }
+  
   .lead-trigger-button {
     background: #941a1d;
     color: white;
@@ -118,44 +170,24 @@
     background: #7d1416;
   }
   
-  .back-button {
-    background: none;
-    border: none;
-    color: #941a1d;
-    font-weight: bold;
-    font-size: 14px;
-    text-align: left;
-    cursor: pointer;
-    margin-bottom: 6px;
-    padding: 0;
-  }
-  .chat-header {
-    background-color: #941a1d;
-    color: white;
-    padding: 0.5rem;
-    font-weight: bold;
-    text-align: center;
-    font-size: 0.9rem;
-    border-bottom: 1px solid #ccc;
-  }
-  .chat-thankyou {
-    padding: 1rem;
-    text-align: center;
-    font-weight: bold;
-    color: #941a1d;
-  }
-  .clear-chat-button {
-    background-color: transparent;
-    border: none;
-    color: #941a1d;
-    font-size: 0.8rem;
-    cursor: pointer;
-    margin: 0.5rem;
-    text-align: right;
-    display: block;
-    margin-left: auto;
-  }
-  .clear-chat-button:hover {
-    text-decoration: underline;
+  @media (max-width: 500px) {
+    .chat-box {
+      width: 90%;
+      right: 5%;
+      bottom: 20px;
+      max-height: 80vh;
+    }
+  
+    .chat-log {
+      max-height: 45vh;
+    }
+  
+    .lead-form {
+      max-height: 80vh;
+    }
+  
+    .lead-form textarea {
+      min-height: 100px;
+    }
   }
   
