@@ -62,11 +62,19 @@ const ChatBot = () => {
 
   const handleLeadSubmit = async () => {
     const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(leadEmail);
+    const phoneIsValid = /^\(?([0-9]{3})\)?[-\s.]?([0-9]{3})[-\s.]?([0-9]{4})$/.test(leadPhone);
   
-    if (!leadName || !leadEmail || !leadMessage || !emailIsValid) {
+    if (!leadName || !emailIsValid || !phoneIsValid || !leadMessage) {
       setMessages(prev => [
         ...prev,
-        { sender: 'bot', text: "Please enter a valid name, email, and message." }
+        {
+          sender: 'bot',
+          text: `Please double check the following fields:<br>
+          • <strong>Name</strong> is filled out<br>
+          • <strong>Email</strong> is valid (e.g. you@example.com)<br>
+          • <strong>Phone</strong> is valid (e.g. 903-555-1234)<br>
+          • <strong>Message</strong> is not empty`
+        }
       ]);
       return;
     }
@@ -74,26 +82,35 @@ const ChatBot = () => {
     setSubmitting(true);
   
     try {
-        await fetch("https://etx-chat-bot.onrender.com/submit-lead", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: leadName,
-              email: leadEmail,
-              phone: leadPhone,
-              message: leadMessage
-            })
-          });
-          
-      setMessages(prev => [
-        ...prev,
-        { sender: 'bot', text: "Thanks! We'll reach out soon." }
-      ]);
+      const response = await fetch("https://etx-chat-bot.onrender.com/submit-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: leadName,
+          email: leadEmail,
+          phone: leadPhone,
+          message: leadMessage
+        })
+      });
+  
+      const result = await response.json();
+      if (result.status === 'success') {
+        setMessages(prev => [
+          ...prev,
+          { sender: 'bot', text: "Thanks! We'll reach out soon." }
+        ]);
+      } else {
+        setMessages(prev => [
+          ...prev,
+          { sender: 'bot', text: "Something went wrong. Please try again later." }
+        ]);
+      }
   
       setFormSubmitted(true);
       setIsFormActive(false);
       setLeadName('');
       setLeadEmail('');
+      setLeadPhone('');
       setLeadMessage('');
     } catch (error) {
       console.error("Lead form error:", error);
@@ -104,8 +121,7 @@ const ChatBot = () => {
     } finally {
       setSubmitting(false);
     }
-  };
-  
+  };  
 
   const renderLeadForm = () => (
     <div className="lead-form">
