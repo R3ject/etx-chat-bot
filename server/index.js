@@ -90,26 +90,38 @@ app.post('/api/message', (req, res) => {
   res.json({ reply });
 });
 
-// 👇 NEW: Route to handle lead form submission
 app.post('/submit-lead', async (req, res) => {
-  const { name, email, phone, message } = req.body;
-
-  const googleWebhookUrl = 'https://script.google.com/macros/s/AKfycbypz5M7dvy4B8rIQMKMXQtaX73t-YrhBQ9dAD6edJi0XTs1eHo-OKkuauq_fuS-4N2S/exec';
-
-  try {
-    const response = await fetch(googleWebhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, phone, message })
-    });
-
-    const text = await response.text(); // Google often responds with plain text
-    res.status(200).json({ status: 'success', message: text });
-  } catch (error) {
-    console.error('Error forwarding lead to Google Sheets:', error);
-    res.status(500).json({ status: 'error', message: 'Failed to send lead to Google Sheets' });
-  }
-});
+    const { name, email, phone, message } = req.body;
+  
+    console.log("👉 Submitting to Google Sheets:");
+    console.log({ name, email, phone, message });
+  
+    const googleWebhookUrl = 'https://script.google.com/macros/s/AKfycbypz5M7dvy4B8rIQMKMXQtaX73t-YrhBQ9dAD6edJi0XTs1eHo-OKkuauq_fuS-4N2S/exec';
+  
+    try {
+      const response = await fetch(googleWebhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // ✅ VERY important
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          message
+        })
+      });
+  
+      const text = await response.text();
+      console.log("✅ Response from Google Sheets:", text);
+  
+      res.status(200).json({ status: 'success', message: text });
+    } catch (error) {
+      console.error('❌ Error forwarding lead to Google Sheets:', error);
+      res.status(500).json({ status: 'error', message: 'Failed to send lead to Google Sheets' });
+    }
+  });
+  
 
 // Start server
 const PORT = process.env.PORT || 5000;
