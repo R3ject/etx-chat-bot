@@ -24,6 +24,10 @@ app.use(limiter);
 
 // === Prewritten Responses ===
 const responses = [
+ {
+    keywords: ['reservation', 'reserve', 'book a table', 'seat', 'seating'],
+    response: "Yes! Just give us a call at <a href='tel:9036307720'>903-630-7720</a> to make a reservation 🍽️"
+ },
   {
     keywords: ['hours', 'open', 'close', 'time'],
     response: "Our hours are: Tues–Thurs 11am–10pm, Fri–Sat 11am–11pm, Sun 11am–8pm, and we're CLOSED on Mondays."
@@ -65,10 +69,6 @@ const responses = [
     response: "We cater! From parties to meetings — call us or check out our <a href='https://etxbrew.com/catering/' target='_blank'>Catering Info</a>"
   },
   {
-    keywords: ['reservation', 'reserve', 'book a table'],
-    response: "Yes! Just give us a call at <a href='tel:9036307720'>903-630-7720</a> to make a reservation 🍽️"
-  },
-  {
     keywords: ['located', 'location', 'address'],
     response: "We're located in Downtown Tyler: <strong>221 S. Broadway, Tyler, TX 75702</strong>"
   },
@@ -82,16 +82,22 @@ const fallbackResponse = "Hmm, I'm not sure about that. You can always <a href='
 
 // Prewritten message handler
 function getPrewrittenResponse(message) {
-  const msgLower = message.toLowerCase();
-  for (let entry of responses) {
-    for (let keyword of entry.keywords) {
-      if (msgLower.includes(keyword)) {
-        return entry.response;
+    const msgLower = message.toLowerCase();
+  
+    for (let entry of responses) {
+      for (let keyword of entry.keywords) {
+        if (msgLower.includes(keyword)) {
+          console.log(`✅ Matched keyword: "${keyword}" for: "${entry.response}"`);
+          return entry.response; // Return immediately on first match
+        }
       }
     }
+  
+    console.log("❌ No match found. Returning fallback.");
+    return fallbackResponse;
   }
-  return fallbackResponse;
-}
+  
+  
 
 // === POST /api/message ===
 app.post('/api/message', (req, res) => {
