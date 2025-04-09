@@ -74,9 +74,8 @@ const ChatBot = () => {
     setSubmitting(true);
   
     try {
-        await fetch("https://script.google.com/macros/s/AKfycbypz5M7dvy4B8rIQMKMXQtaX73t-YrhBQ9dAD6edJi0XTs1eHo-OKkuauq_fuS-4N2S/exec", {
+        await fetch("https://etx-chat-bot.onrender.com/submit-lead", {
             method: "POST",
-            mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               name: leadName,
@@ -86,7 +85,6 @@ const ChatBot = () => {
             })
           });
           
-  
       setMessages(prev => [
         ...prev,
         { sender: 'bot', text: "Thanks! We'll reach out soon." }
