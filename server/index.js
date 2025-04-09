@@ -99,18 +99,19 @@ app.post('/submit-lead', async (req, res) => {
     const googleWebhookUrl = 'https://script.google.com/macros/s/AKfycbypz5M7dvy4B8rIQMKMXQtaX73t-YrhBQ9dAD6edJi0XTs1eHo-OKkuauq_fuS-4N2S/exec';
   
     try {
-      const response = await fetch(googleWebhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json', // ✅ VERY important
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          phone,
-          message
-        })
-      });
+        const response = await fetch(googleWebhookUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+              name,
+              email,
+              phone,
+              message
+            })
+          });
+          
   
       const text = await response.text();
       console.log("✅ Response from Google Sheets:", text);
