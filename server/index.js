@@ -9,6 +9,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const rateLimit = require('express-rate-limit');
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // limit each IP to 10 requests per minute
+  message: { reply: "You're sending messages too fast. Try again soon." }
+});
+
+app.use(limiter);
+
+
 // Define pre-written responses based on keywords
 const responses = [
   {
@@ -88,6 +99,13 @@ app.post('/api/message', (req, res) => {
   }
   const reply = getPrewrittenResponse(message);
   res.json({ reply });
+  const suspicious =
+  !req.body.name || !req.body.email || !req.body.message || !req.body.phone;
+
+if (suspicious) {
+  console.warn("⚠️ Suspicious input received:", req.body);
+}
+
 });
 
 app.post('/submit-lead', async (req, res) => {
