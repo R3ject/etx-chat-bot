@@ -74,16 +74,18 @@ const ChatBot = () => {
     setSubmitting(true);
   
     try {
-      await fetch("https://script.google.com/macros/s/AKfycbypz5M7dvy4B8rIQMKMXQtaX73t-YrhBQ9dAD6edJi0XTs1eHo-OKkuauq_fuS-4N2S/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: leadName,
-          email: leadEmail,
-          phone: leadPhone,
-          message: leadMessage
-        })
-      });
+        await fetch("https://script.google.com/macros/s/AKfycbypz5M7dvy4B8rIQMKMXQtaX73t-YrhBQ9dAD6edJi0XTs1eHo-OKkuauq_fuS-4N2S/exec", {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: leadName,
+              email: leadEmail,
+              phone: leadPhone,
+              message: leadMessage
+            })
+          });
+          
   
       setMessages(prev => [
         ...prev,
