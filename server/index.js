@@ -96,7 +96,7 @@ app.post('/submit-lead', async (req, res) => {
     console.log("👉 Submitting to Google Sheets:");
     console.log({ name, email, phone, message });
   
-    const googleWebhookUrl = 'https://script.google.com/macros/s/AKfycbypz5M7dvy4B8rIQMKMXQtaX73t-YrhBQ9dAD6edJi0XTs1eHo-OKkuauq_fuS-4N2S/exec';
+    const googleWebhookUrl = 'https://script.google.com/macros/s/AKfycby8Rofl-bG5_G99B97rYn0dcncsRVzNzV6kWdGdJEpQ7dkc1-1xPzfMhTGy31izWXm5/exec';
   
     try {
         const response = await fetch(googleWebhookUrl, {
