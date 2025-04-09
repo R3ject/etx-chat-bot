@@ -11,20 +11,27 @@ const ChatBot = () => {
   const [leadName, setLeadName] = useState('');
   const [leadEmail, setLeadEmail] = useState('');
   const [leadMessage, setLeadMessage] = useState('');
+  const [leadPhone, setLeadPhone] = useState('');
+  const [leadTopic, setLeadTopic] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [leadPhone, setLeadPhone] = useState('');
-
 
   const toggleChat = () => setIsOpen(!isOpen);
 
-  // Auto-scroll to latest message
   useEffect(() => {
     const chatLog = document.querySelector('.chat-log');
     if (chatLog) {
-      chatLog.scrollTop = chatLog.scrollHeight;
+      chatLog.scrollTo({
+        top: chatLog.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   }, [messages]);
+  
+
+  const clearChat = () => {
+    setMessages([{ sender: 'bot', text: 'Hey! How can I help you today?' }]);
+  };
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -33,7 +40,6 @@ const ChatBot = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
 
-    // Simulated "Typing..." state
     setMessages((prev) => [...prev, { sender: 'bot', text: 'Typing...' }]);
 
     try {
@@ -47,7 +53,6 @@ const ChatBot = () => {
 
       setMessages((prev) => [...prev.slice(0, -1), { sender: 'bot', text: data.reply }]);
 
-      // Trigger lead form if keywords are detected
       const triggerWords = ['quote', 'estimate', 'contact', 'email', 'name', 'catering'];
       if (triggerWords.some(word => input.toLowerCase().includes(word))) {
         setIsFormActive(true);
@@ -63,7 +68,7 @@ const ChatBot = () => {
   const handleLeadSubmit = async () => {
     const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(leadEmail);
     const phoneIsValid = /^\(?([0-9]{3})\)?[-\s.]?([0-9]{3})[-\s.]?([0-9]{4})$/.test(leadPhone);
-  
+
     if (!leadName || !emailIsValid || !phoneIsValid || !leadMessage) {
       setMessages(prev => [
         ...prev,
@@ -78,9 +83,9 @@ const ChatBot = () => {
       ]);
       return;
     }
-  
+
     setSubmitting(true);
-  
+
     try {
       const response = await fetch("https://etx-chat-bot.onrender.com/submit-lead", {
         method: "POST",
@@ -89,10 +94,11 @@ const ChatBot = () => {
           name: leadName,
           email: leadEmail,
           phone: leadPhone,
-          message: leadMessage
+          message: leadMessage,
+          topic: leadTopic
         })
       });
-  
+
       const result = await response.json();
       if (result.status === 'success') {
         setMessages(prev => [
@@ -105,13 +111,14 @@ const ChatBot = () => {
           { sender: 'bot', text: "Something went wrong. Please try again later." }
         ]);
       }
-  
+
       setFormSubmitted(true);
       setIsFormActive(false);
       setLeadName('');
       setLeadEmail('');
       setLeadPhone('');
       setLeadMessage('');
+      setLeadTopic('');
     } catch (error) {
       console.error("Lead form error:", error);
       setMessages(prev => [
@@ -121,12 +128,26 @@ const ChatBot = () => {
     } finally {
       setSubmitting(false);
     }
-  };  
+
+    setTimeout(() => {
+      setIsOpen(false);
+      setFormSubmitted(false);
+    }, 4000);
+  };
 
   const renderLeadForm = () => (
     <div className="lead-form">
       <button className="back-button" onClick={() => setIsFormActive(false)}>← Back to chat</button>
       <p>Let’s get your info and we’ll follow up!</p>
+
+      <select value={leadTopic} onChange={(e) => setLeadTopic(e.target.value)}>
+        <option value="">Select a topic</option>
+        <option value="Catering">Catering</option>
+        <option value="Booking">Booking</option>
+        <option value="Private Events">Private Events</option>
+        <option value="Other">Other</option>
+      </select>
+
       <input
         type="text"
         placeholder="Your name"
@@ -140,11 +161,11 @@ const ChatBot = () => {
         onChange={(e) => setLeadEmail(e.target.value)}
       />
       <input
-         type="tel"
-          placeholder="Your phone number"
-          value={leadPhone}
-          onChange={(e) => setLeadPhone(e.target.value)}
-    />
+        type="tel"
+        placeholder="Your phone number"
+        value={leadPhone}
+        onChange={(e) => setLeadPhone(e.target.value)}
+      />
       <textarea
         placeholder="Message or question"
         value={leadMessage}
@@ -155,13 +176,14 @@ const ChatBot = () => {
       </button>
     </div>
   );
-  
 
   return (
     <div className="chat-container">
       <button className="chat-toggle" onClick={toggleChat}>💬</button>
       {isOpen && (
         <div className="chat-box">
+          <div className="chat-header">ETX Brewing Co. Chat Bot 🤖</div>
+
           <div className="chat-log">
             {messages.map((msg, idx) => (
               <div
@@ -171,6 +193,12 @@ const ChatBot = () => {
               ></div>
             ))}
           </div>
+
+          <button className="clear-chat-button" onClick={clearChat}>🔄 Clear Chat</button>
+
+          {formSubmitted && (
+            <div className="chat-thankyou">Thanks again! We'll be in touch soon. 🍻</div>
+          )}
 
           {!formSubmitted && isFormActive && renderLeadForm()}
 
@@ -192,6 +220,5 @@ const ChatBot = () => {
     </div>
   );
 };
-/*Made by R3jected Wrkx */
 
 export default ChatBot;
