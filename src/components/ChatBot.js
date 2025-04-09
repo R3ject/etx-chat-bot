@@ -176,5 +176,6 @@ const ChatBot = () => {
     </div>
   );
 };
+/*Made by R3jected Wrkx */
 
 export default ChatBot;
