@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ChatBot.css';
+import ReactGA from 'react-ga4';
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +17,18 @@ const ChatBot = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const toggleChat = () => setIsOpen(!isOpen);
+
+  const toggleChat = () => {
+    setIsOpen(!isOpen);
+    if (!isOpen) {
+      ReactGA.event({
+        category: 'ChatBot',
+        action: 'Open Chat',
+        label: 'User opened chatbot'
+      });
+    }
+  };
+
 
   useEffect(() => {
     const chatLog = document.querySelector('.chat-log');
@@ -35,24 +47,31 @@ const ChatBot = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-
+  
     const userMessage = { sender: 'user', text: input };
     setMessages((prev) => [...prev, userMessage]);
+  
+    // ✅ TRACKING: Message sent
+    ReactGA.event({
+      category: 'ChatBot',
+      action: 'Send Message',
+      label: input
+    });
+  
     setInput('');
-
     setMessages((prev) => [...prev, { sender: 'bot', text: 'Typing...' }]);
-
+  
     try {
       const response = await fetch('https://etx-chat-bot.onrender.com/api/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input })
       });
-
+  
       const data = await response.json();
-
+  
       setMessages((prev) => [...prev.slice(0, -1), { sender: 'bot', text: data.reply }]);
-
+  
       const triggerWords = ['quote', 'estimate', 'contact', 'email', 'name', 'catering'];
       if (triggerWords.some(word => input.toLowerCase().includes(word))) {
         setIsFormActive(true);
@@ -64,6 +83,7 @@ const ChatBot = () => {
       }]);
     }
   };
+  
 
   const handleLeadSubmit = async () => {
     const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(leadEmail);
@@ -111,6 +131,13 @@ const ChatBot = () => {
           { sender: 'bot', text: "Something went wrong. Please try again later." }
         ]);
       }
+      // Inside handleLeadSubmit after a successful submission
+      ReactGA.event({
+        category: 'ChatBot',
+        action: 'Submit Lead',
+        label: leadTopic || 'No Topic'
+      });
+
 
       setFormSubmitted(true);
       setIsFormActive(false);
