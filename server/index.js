@@ -8,7 +8,9 @@ const nodemailer = require('nodemailer');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'https://starlit-narwhal-41657d.netlify.app'
+}));
 app.use(express.json());
 
 // Rate limiting to prevent spam
