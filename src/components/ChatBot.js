@@ -21,12 +21,10 @@ const ChatBot = () => {
   const toggleChat = () => {
     setIsOpen(!isOpen);
     if (!isOpen) {
-      ReactGA.event({
-        category: 'ChatBot',
-        action: 'Open Chat',
-        label: 'User opened chatbot',
-        transport_type: 'beacon'
-      });           
+      window.parent.postMessage({
+        type: 'chatbot-event',
+        event: 'open_chat'
+      }, '*');                
     }
   };
 
@@ -65,12 +63,11 @@ const ChatBot = () => {
       const data = await response.json();
   
       // ✅ Bot replied successfully — track it!
-      ReactGA.event({
-        category: 'ChatBot',
-        action: 'Send Message',
-        label: input,
-        transport_type: 'beacon'
-      });
+      window.parent.postMessage({
+        type: 'chatbot-event',
+        event: 'send_message',
+        message: input
+      }, '*');
   
       setMessages((prev) => [...prev.slice(0, -1), { sender: 'bot', text: data.reply }]);
   
@@ -135,14 +132,12 @@ const ChatBot = () => {
         ]);
       }
       // Inside handleLeadSubmit after a successful submission
-      ReactGA.event('Submit Lead', {
-        category: 'ChatBot',
-        label: leadTopic || 'No Topic',
-        transport_type: 'beacon'
-      });
+      window.parent.postMessage({
+        type: 'chatbot-event',
+        event: 'submit_lead',
+        topic: leadTopic
+      }, '*');
       
-
-
       setFormSubmitted(true);
       setIsFormActive(false);
       setLeadName('');
