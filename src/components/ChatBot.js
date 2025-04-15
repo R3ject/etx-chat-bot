@@ -24,8 +24,9 @@ const ChatBot = () => {
       ReactGA.event({
         category: 'ChatBot',
         action: 'Open Chat',
-        label: 'User opened chatbot'
-      });
+        label: 'User opened chatbot',
+        transport_type: 'beacon'
+      });           
     }
   };
 
@@ -67,7 +68,8 @@ const ChatBot = () => {
       ReactGA.event({
         category: 'ChatBot',
         action: 'Send Message',
-        label: input
+        label: input,
+        transport_type: 'beacon'
       });
   
       setMessages((prev) => [...prev.slice(0, -1), { sender: 'bot', text: data.reply }]);
@@ -133,11 +135,12 @@ const ChatBot = () => {
         ]);
       }
       // Inside handleLeadSubmit after a successful submission
-      ReactGA.event({
+      ReactGA.event('Submit Lead', {
         category: 'ChatBot',
-        action: 'Submit Lead',
-        label: leadTopic || 'No Topic'
+        label: leadTopic || 'No Topic',
+        transport_type: 'beacon'
       });
+      
 
 
       setFormSubmitted(true);

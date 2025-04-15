@@ -72,6 +72,10 @@ const responses = [
   {
     keywords: ['thank you', 'thanks', 'thankyou', 'appreciate it'],
     response: "You're so welcome! 😊 If you have any other questions, I’m here to help."
+  },
+  {
+    keywords: ['wine', 'cider', 'other drinks', 'non-alcoholic', 'NA'],
+    response: "We offer more than just beer! We have a selection of cider and mead as well as non alcoholic options. Check out our <a href='https://etxbrew.com/beer-wine-cider/' target='_blank'>Drink Menu</a>"
   }
 ];
 
