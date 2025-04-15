@@ -50,15 +50,8 @@ const ChatBot = () => {
   
     const userMessage = { sender: 'user', text: input };
     setMessages((prev) => [...prev, userMessage]);
-  
-    // ✅ TRACKING: Message sent
-    ReactGA.event({
-      category: 'ChatBot',
-      action: 'Send Message',
-      label: input
-    });
-  
     setInput('');
+  
     setMessages((prev) => [...prev, { sender: 'bot', text: 'Typing...' }]);
   
     try {
@@ -70,6 +63,13 @@ const ChatBot = () => {
   
       const data = await response.json();
   
+      // ✅ Bot replied successfully — track it!
+      ReactGA.event({
+        category: 'ChatBot',
+        action: 'Send Message',
+        label: input
+      });
+  
       setMessages((prev) => [...prev.slice(0, -1), { sender: 'bot', text: data.reply }]);
   
       const triggerWords = ['quote', 'estimate', 'contact', 'email', 'name', 'catering'];
@@ -77,13 +77,14 @@ const ChatBot = () => {
         setIsFormActive(true);
       }
     } catch (error) {
+      console.error("ChatBot sendMessage error:", error);
+  
       setMessages((prev) => [...prev.slice(0, -1), {
         sender: 'bot',
         text: "Oops, something went wrong. Try again later."
       }]);
     }
-  };
-  
+  };  
 
   const handleLeadSubmit = async () => {
     const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(leadEmail);
