@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './ChatBot.css';
-import ReactGA from 'react-ga4';
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
