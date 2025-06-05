@@ -5,7 +5,7 @@
 }
 
 .chat-toggle {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   right: 10px;
   width: 60px;
@@ -29,7 +29,7 @@
 }
 
 .chat-box {
-  position: absolute;
+  position: fixed;
   bottom: 80px;
   right: 10px;
   width: 350px;

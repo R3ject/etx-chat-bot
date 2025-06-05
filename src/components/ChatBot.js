@@ -22,7 +22,7 @@ const ChatBot = () => {
     window.parent.postMessage({
       type: 'chatbot-toggle',
       state: newState ? 'open' : 'closed'
-    }, 'https://starlit-narwhal-41657d.netlify.app');
+    }, '*');
   };
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const ChatBot = () => {
         type: 'chatbot-event',
         event: 'send_message',
         message: input
-      }, 'https://starlit-narwhal-41657d.netlify.app');
+      }, '*');
       setMessages((prev) => [...prev.slice(0, -1), { sender: 'bot', text: data.reply }]);
       const triggerWords = ['quote', 'estimate', 'contact', 'email', 'name', 'catering'];
       if (triggerWords.some(word => input.toLowerCase().includes(word))) {
@@ -117,7 +117,7 @@ const ChatBot = () => {
         type: 'chatbot-event',
         event: 'submit_lead',
         topic: leadTopic
-      }, 'https://starlit-narwhal-41657d.netlify.app');
+      }, '*');
       setFormSubmitted(true);
       setIsFormActive(false);
       setLeadName('');
