@@ -28,6 +28,7 @@ const ChatBot = () => {
 };
 
 
+
   useEffect(() => {
     const chatLog = document.querySelector('.chat-log');
     if (chatLog) {
