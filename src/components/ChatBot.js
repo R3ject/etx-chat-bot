@@ -204,47 +204,43 @@ const ChatBot = () => {
   );
 
   return (
-    <div className="chat-container">
-      <button className="chat-toggle" onClick={toggleChat}>💬</button>
-      {isOpen && (
-        <div className="chat-box">
-          <div className="chat-header">ETX Brewing Co. Chat Bot 🤖</div>
-
-          <div className="chat-log">
-            {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`msg ${msg.sender}`}
-                dangerouslySetInnerHTML={{ __html: msg.text }}
-              ></div>
-            ))}
-          </div>
-
-          <button className="clear-chat-button" onClick={clearChat}>🔄 Clear Chat</button>
-
-          {formSubmitted && (
-            <div className="chat-thankyou">Thanks again! We'll be in touch soon. 🍻</div>
-          )}
-
-          {!formSubmitted && isFormActive && renderLeadForm()}
-
-          {!isFormActive && (
-            <>
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                placeholder="Type your message"
-              />
-              <button className="lead-trigger-button" onClick={() => setIsFormActive(true)}>
-                👤 Leave Your Info
-              </button>
-            </>
-          )}
+  <div className="chat-container">
+    {/* Always render the toggle button */}
+    <button className="chat-toggle" onClick={toggleChat}>💬</button>
+    {isOpen && (
+      <div className="chat-box">
+        <div className="chat-header">ETX Brewing Co. Chat Bot 🤖</div>
+        <div className="chat-log">
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
+              className={`msg ${msg.sender}`}
+              dangerouslySetInnerHTML={{ __html: msg.text }}
+            ></div>
+          ))}
         </div>
-      )}
-    </div>
-  );
+        <button className="clear-chat-button" onClick={clearChat}>🔄 Clear Chat</button>
+        {formSubmitted && (
+          <div className="chat-thankyou">Thanks again! We'll be in touch soon. 🍻</div>
+        )}
+        {!formSubmitted && isFormActive && renderLeadForm()}
+        {!isFormActive && (
+          <>
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+              placeholder="Type your message"
+            />
+            <button className="lead-trigger-button" onClick={() => setIsFormActive(true)}>
+              👤 Leave Your Info
+            </button>
+          </>
+        )}
+      </div>
+    )}
+  </div>
+);
 };
 
 export default ChatBot;
