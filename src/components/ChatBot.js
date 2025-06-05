@@ -18,14 +18,14 @@ const ChatBot = () => {
 
 
   const toggleChat = () => {
-    setIsOpen(!isOpen);
-    if (!isOpen) {
-      window.parent.postMessage({
-        type: 'chatbot-event',
-        event: 'open_chat'
-      }, '*');                
-    }
-  };
+  const newState = !isOpen;
+  setIsOpen(newState);
+
+  window.parent.postMessage({
+    type: 'chatbot-toggle',
+    state: newState ? 'open' : 'closed'
+  }, '*');
+};
 
 
   useEffect(() => {
