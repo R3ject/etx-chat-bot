@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import ChatBot from './ChatBot';
-import './ChatBot.css';
+import ChatBot from './components/ChatBot'; // Updated path
+import './components/ChatBot.css'; // Updated path
 import ReactGA from 'react-ga4';
 
 ReactGA.initialize('G-5Q8C1DPBJ3');

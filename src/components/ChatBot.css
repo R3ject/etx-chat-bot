@@ -10,14 +10,14 @@
   right: 10px;
   width: 60px;
   height: 60px;
-  background-color: #941a1d;
+  background-color: #941A1D;
   color: #fff;
   border: none;
   border-radius: 50%;
   font-size: 24px;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  z-index: 10000; /* Ensure button is above other elements */
+  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,26 +25,26 @@
 }
 
 .chat-toggle:hover {
-  background-color: #7d1416;
+  background-color: #7D1416;
 }
 
 .chat-box {
-  position: absolute; /* Changed from fixed to work within iframe */
+  position: absolute;
   bottom: 80px;
   right: 10px;
   width: 350px;
-  max-height: 500px; /* Reduced to fit within iframe */
+  max-height: 500px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  z-index: 9998; /* Below toggle button */
+  z-index: 9998;
 }
 
 .chat-header {
-  background-color: #941a1d;
+  background-color: #941A1D;
   color: white;
   padding: 0.5rem;
   font-weight: bold;
@@ -57,7 +57,7 @@
   flex: 1;
   overflow-y: auto;
   padding: 10px;
-  max-height: 350px; /* Prevent excessive scrolling */
+  max-height: 350px;
 }
 
 .msg {
@@ -73,7 +73,7 @@
 
 .msg.user {
   text-align: right;
-  color: #941a1d;
+  color: #941A1D;
   font-weight: 600;
 }
 
@@ -110,13 +110,13 @@
 }
 
 .lead-form textarea {
-  min-height: 100px; /* Adjusted for mobile */
+  min-height: 100px;
   resize: vertical;
 }
 
 .lead-form button {
   padding: 12px;
-  background: #941a1d;
+  background: #941A1D;
   color: white;
   border: none;
   border-radius: 6px;
@@ -126,13 +126,13 @@
 }
 
 .lead-form button:hover {
-  background: #7d1416;
+  background: #7D1416;
 }
 
 .back-button {
   background: none;
   border: none;
-  color: #941a1d;
+  color: #941A1D;
   font-weight: bold;
   font-size: 14px;
   text-align: left;
@@ -145,13 +145,13 @@
   padding: 1rem;
   text-align: center;
   font-weight: bold;
-  color: #941a1d;
+  color: #941A1D;
 }
 
 .clear-chat-button {
   background-color: transparent;
   border: none;
-  color: #941a1d;
+  color: #941A1D;
   font-size: 0.8rem;
   cursor: pointer;
   margin: 0.5rem;
@@ -165,7 +165,7 @@
 }
 
 .lead-trigger-button {
-  background: #941a1d;
+  background: #941A1D;
   color: white;
   border: none;
   padding: 10px;
@@ -179,27 +179,27 @@
 }
 
 .lead-trigger-button:hover {
-  background: #7d1416;
+  background: #7D1416;
 }
 
 @media (max-width: 500px) {
   .chat-box {
-    width: calc(100vw - 20px); /* Full width minus padding */
-    max-height: 80vh; /* Limit height to avoid covering screen */
+    width: calc(100vw - 20px);
+    max-height: 80vh;
     right: 10px;
     bottom: 70px;
   }
 
   .chat-log {
-    max-height: 40vh; /* Adjust for mobile */
+    max-height: 40vh;
   }
 
   .lead-form {
-    max-height: 70vh; /* Ensure form fits within chat-box */
+    max-height: 70vh;
   }
 
   .lead-form textarea {
-    min-height: 80px; /* Smaller textarea for mobile */
+    min-height: 80px;
   }
 
   .chat-toggle {
