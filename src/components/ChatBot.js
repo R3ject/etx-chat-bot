@@ -16,18 +16,14 @@ const ChatBot = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-
   const toggleChat = () => {
-  const newState = !isOpen;
-  setIsOpen(newState);
-
-  window.parent.postMessage({
-    type: 'chatbot-toggle',
-    state: newState ? 'open' : 'closed'
-  }, '*');
-};
-
-
+    const newState = !isOpen;
+    setIsOpen(newState);
+    window.parent.postMessage({
+      type: 'chatbot-toggle',
+      state: newState ? 'open' : 'closed'
+    }, 'https://starlit-narwhal-41657d.netlify.app');
+  };
 
   useEffect(() => {
     const chatLog = document.querySelector('.chat-log');
@@ -38,7 +34,6 @@ const ChatBot = () => {
       });
     }
   }, [messages]);
-  
 
   const clearChat = () => {
     setMessages([{ sender: 'bot', text: 'Hey! How can I help you today?' }]);
@@ -46,49 +41,39 @@ const ChatBot = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-  
     const userMessage = { sender: 'user', text: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
-  
     setMessages((prev) => [...prev, { sender: 'bot', text: 'Typing...' }]);
-  
     try {
       const response = await fetch('https://etx-chat-bot.onrender.com/api/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input })
       });
-  
       const data = await response.json();
-  
-      // ✅ Bot replied successfully — track it!
       window.parent.postMessage({
         type: 'chatbot-event',
         event: 'send_message',
         message: input
-      }, '*');
-  
+      }, 'https://starlit-narwhal-41657d.netlify.app');
       setMessages((prev) => [...prev.slice(0, -1), { sender: 'bot', text: data.reply }]);
-  
       const triggerWords = ['quote', 'estimate', 'contact', 'email', 'name', 'catering'];
       if (triggerWords.some(word => input.toLowerCase().includes(word))) {
         setIsFormActive(true);
       }
     } catch (error) {
       console.error("ChatBot sendMessage error:", error);
-  
       setMessages((prev) => [...prev.slice(0, -1), {
         sender: 'bot',
         text: "Oops, something went wrong. Try again later."
       }]);
     }
-  };  
+  };
 
   const handleLeadSubmit = async () => {
     const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(leadEmail);
     const phoneIsValid = /^\(?([0-9]{3})\)?[-\s.]?([0-9]{3})[-\s.]?([0-9]{4})$/.test(leadPhone);
-
     if (!leadName || !emailIsValid || !phoneIsValid || !leadMessage) {
       setMessages(prev => [
         ...prev,
@@ -103,9 +88,7 @@ const ChatBot = () => {
       ]);
       return;
     }
-
     setSubmitting(true);
-
     try {
       const response = await fetch("https://etx-chat-bot.onrender.com/submit-lead", {
         method: "POST",
@@ -118,7 +101,6 @@ const ChatBot = () => {
           topic: leadTopic
         })
       });
-
       const result = await response.json();
       if (result.status === 'success') {
         setMessages(prev => [
@@ -131,13 +113,11 @@ const ChatBot = () => {
           { sender: 'bot', text: "Something went wrong. Please try again later." }
         ]);
       }
-      // Inside handleLeadSubmit after a successful submission
       window.parent.postMessage({
         type: 'chatbot-event',
         event: 'submit_lead',
         topic: leadTopic
-      }, '*');
-      
+      }, 'https://starlit-narwhal-41657d.netlify.app');
       setFormSubmitted(true);
       setIsFormActive(false);
       setLeadName('');
@@ -154,7 +134,6 @@ const ChatBot = () => {
     } finally {
       setSubmitting(false);
     }
-
     setTimeout(() => {
       setIsOpen(false);
       setFormSubmitted(false);
@@ -165,7 +144,6 @@ const ChatBot = () => {
     <div className="lead-form">
       <button className="back-button" onClick={() => setIsFormActive(false)}>← Back to chat</button>
       <p>Let’s get your info and we’ll follow up!</p>
-
       <select value={leadTopic} onChange={(e) => setLeadTopic(e.target.value)}>
         <option value="">Select a topic</option>
         <option value="Catering">Catering</option>
@@ -173,7 +151,6 @@ const ChatBot = () => {
         <option value="Private Events">Private Events</option>
         <option value="Other">Other</option>
       </select>
-
       <input
         type="text"
         placeholder="Your name"
@@ -204,43 +181,42 @@ const ChatBot = () => {
   );
 
   return (
-  <div className="chat-container">
-    {/* Always render the toggle button */}
-    <button className="chat-toggle" onClick={toggleChat}>💬</button>
-    {isOpen && (
-      <div className="chat-box">
-        <div className="chat-header">ETX Brewing Co. Chat Bot 🤖</div>
-        <div className="chat-log">
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`msg ${msg.sender}`}
-              dangerouslySetInnerHTML={{ __html: msg.text }}
-            ></div>
-          ))}
+    <div className="chat-container">
+      <button className="chat-toggle" onClick={toggleChat}>💬</button>
+      {isOpen && (
+        <div className="chat-box">
+          <div className="chat-header">ETX Brewing Co. Chat Bot 🤖</div>
+          <div className="chat-log">
+            {messages.map((msg, idx) => (
+              <div
+                key={idx}
+                className={`msg ${msg.sender}`}
+                dangerouslySetInnerHTML={{ __html: msg.text }}
+              ></div>
+            ))}
+          </div>
+          <button className="clear-chat-button" onClick={clearChat}>🔄 Clear Chat</button>
+          {formSubmitted && (
+            <div className="chat-thankyou">Thanks again! We'll be in touch soon. 🍻</div>
+          )}
+          {!formSubmitted && isFormActive && renderLeadForm()}
+          {!isFormActive && (
+            <>
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                placeholder="Type your message"
+              />
+              <button className="lead-trigger-button" onClick={() => setIsFormActive(true)}>
+                👤 Leave Your Info
+              </button>
+            </>
+          )}
         </div>
-        <button className="clear-chat-button" onClick={clearChat}>🔄 Clear Chat</button>
-        {formSubmitted && (
-          <div className="chat-thankyou">Thanks again! We'll be in touch soon. 🍻</div>
-        )}
-        {!formSubmitted && isFormActive && renderLeadForm()}
-        {!isFormActive && (
-          <>
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Type your message"
-            />
-            <button className="lead-trigger-button" onClick={() => setIsFormActive(true)}>
-              👤 Leave Your Info
-            </button>
-          </>
-        )}
-      </div>
-    )}
-  </div>
-);
+      )}
+    </div>
+  );
 };
 
 export default ChatBot;
